@@ -1,106 +1,85 @@
-# CS340-Client-Server-Devlopment
-SNHU course
+# Grazioso Salvare Rescue Animal Dashboard
 
-CS 340 README
+## Required Functionality
 
-About the Project/Project Title/Purpose
-This project is a Python module that allows a user to perform all four CRUD (Create, Read, Update, Delete) operations on a MongoDB database. As outlined in the project scenario, this module is designed to work with animal shelter data to help an organization called Grazioso Salvare identify dogs for their search-and-rescue training program. The code is written in an object-oriented style using an AnimalShelter class to make it reusable and easy to understand.
+This project provides Grazioso Salvare with a functional, interactive web dashboard to help identify suitable canine candidates for search-and-rescue training. The dashboard interfaces with a MongoDB database containing animal shelter data and allows users to filter, visualize, and explore this data in real-time.
 
-Motivation
-The main goal of this project is to complete the first phase of development for the CS 340 course project. The assignment scenario involves building a tool for Grazioso Salvare, a company that trains search-and-rescue dogs. They need a way to filter through shelter data to find dogs that fit specific profiles, such as being under a certain age or of a particular breed.
+### Key Features
 
-This Python module is the first step in building that tool. It serves as the bridge between the database holding the animal information and the user-facing application that will be built later. By creating methods to handle the Create, Read, Update, and Delete functions, this module provides the essential back-end functionality needed for the application to work.
+#### Interactive Filtering
 
-Getting Started
-To get a local copy of this project up and running for testing, you first need to ensure the database environment is correctly configured.
+Users can filter animal data based on three specific search-and-rescue profiles using radio buttons:
 
-MongoDB Instance: A local MongoDB server must be running.
+- **Water Rescue**: Filters for intact females of specific water-proficient breeds under two years of age
+- **Mountain/Wilderness Rescue**: Filters for intact males of specific mountain-proficient breeds under two years of age
+- **Disaster/Individual Tracking**: Filters for intact males of specific tracking-proficient breeds under two years of age
+- **Reset**: Clears all filters and displays all animals in the database
 
-Database and Collection: An aac database must exist with an animals collection containing the shelter outcome data.
+#### Dynamic Data Table
 
-User Account: A user named aacuser must be created with readWrite privileges to the aac database.
+An interactive table displays animals matching the current filter criteria. The table supports:
+- Native column sorting
+- Column filtering
+- Pagination for large datasets
 
-Installation
-This project requires Python 3 and the pymongo library.
-Python Driver: The pymongo library was chosen as it is the official and recommended Python driver for working with MongoDB. It provides a straightforward, Pythonic API for executing database commands, managing connections, and handling data, making it the industry standard for connecting Python applications to MongoDB.
-Installation Command: Ensure pip is installed with your Python distribution. Install the pymongo library by running the following command in your terminal: pip install pymongo
+#### Data Visualization Chart
 
+A pie chart displays the proportional distribution of breeds for animals currently visible in the data table. The chart updates automatically as filters are applied.
 
-Usage
-The primary use of this module is to interact with the animal shelter database. The intended usage for this assignment is to test the module's functionality from a Jupyter Notebook.
+#### Geolocation Mapping
 
-Configure Password: Open the CRUD_Python_Module.py file and replace the placeholder 'your_password_here' with the actual password for the aacuser.
+A map displays the location of a selected animal. Clicking a row in the data table places a marker on the map at the animal's grid coordinates, with:
+- A tooltip showing the animal's breed
+- A popup showing its name
 
-Open Notebook: Launch Jupyter Lab and open the ModuleFourTestScript.ipynb file.
+## Tools and Rationale
 
-Execute Script: Run the code cell within the notebook. 
+This project was built using a modern Python-based web stack, chosen for its efficiency, powerful data handling capabilities, and robust visualization options.
 
-Verify Output: Observe the output printed below the cell. A successful execution will confirm that a record was created and then successfully read from the database. A screenshot of this output is the final deliverable.
+### MongoDB (The Model Component)
 
- 
+MongoDB was selected as the database due to its nature as a NoSQL, document-oriented database:
 
+- **Flexibility**: Schema-less design accommodates variations from different animal shelters without requiring rigid table structures
+- **Rich Query Language**: Enables complex compound filters (age, sex, breed) required by Grazioso Salvare
+- **Python Integration**: PyMongo provides a simple API, allowing developers to work with database documents as native Python dictionaries
 
+### Dash Framework (The View and Controller Components)
 
-Code Example
-The core functionality is encapsulated in the AnimalShelter class. The key methods are:
+Dash was used to build the web application, providing both the "View" (HTML layout) and "Controller" (Python callbacks):
 
-create(self, data): Inserts a new document into the collection.
-Input: A Python dictionary (data) representing the document.
-Output: Returns True on successful insertion, False otherwise.
+- **Pure Python**: Creates complex, interactive dashboards without writing separate JavaScript, HTML, and CSS
+- **Reactive Callbacks**: Functions automatically triggered by user interactions (clicks, selections) for dynamic, responsive applications
+- **Component Libraries**: `dash_table` for interactive tables and `dash_leaflet` for geolocation maps
 
-read(self, query): Queries for documents in the collection.
-Input: A Python dictionary (query) specifying the search criteria.
-Output: Returns a list of matching documents. Returns an empty list [] if none are found.
+### Supporting Libraries and Resources
 
-update(self, query, new_data): Updates one or more documents that match a query.
-Input: A query dictionary to find the documents and a new_data dictionary containing the fields to be changed.
-Output: Returns the number of documents that were modified.
+| Library | Purpose |
+|---------|---------|
+| **Pandas** | Data manipulation and DataFrame structure for handling MongoDB data |
+| **Plotly Express** | Creating the data visualization (pie chart) with seamless Dash/pandas integration |
+| **JupyterDash** | Dash version designed to run directly inside Jupyter Notebook |
 
-delete(self, query): Deletes one or more documents that match a query.
-Input: A query dictionary to find the documents to be deleted.
-Output: Returns the number of documents that were deleted.
+## Project Steps
 
+1. **Module Enhancement**: Updated the `CRUD_Python_Module` - modified `__init__` to accept all connection parameters, enhanced the `read` method to support MongoDB projections
 
+2. **Dashboard Layout**: Constructed HTML layout in `ProjectTwoDashboard.ipynb` including Grazioso Salvare logo, student identifier, `dcc.RadioItems` for filtering, `dash_table.DataTable`, and Div elements for chart and map
 
+3. **Filtering Logic**: Implemented `update_dashboard` callback to build and execute MongoDB queries based on selected radio button, returning data to update the DataTable
 
-Tests
-The testing is performed by the ModuleFourTestScript.ipynb script. It imports the AnimalShelter class, creates a new animal record, and then reads that record to verify its existence.
-The following code demonstrates the test procedure:
+4. **Chart Implementation**: Created `update_graphs` callback that takes filtered data, uses pandas to group by breed, and generates a Plotly Express pie chart
 
+5. **Map Implementation**: Implemented `update_map` callback to extract latitude/longitude from selected table row and render a dash_leaflet map with a marker
 
+6. **Debugging and Refinement**: Fixed data type errors (TypeError) and empty/initial states (IndexError). Added robust guard clauses and try-except blocks for application stability
 
-Demonstration of Functional Operations
-MongoDB import execution
+## Challenge and Resolution
 
+**Challenge**: Map not displaying when clicking radio buttons to change targets
 
-User authentication execution
+**Resolution**: Added the `selected_rows=[0]` property to the `dash_table.DataTable` component. This forces the table to pre-select the first row upon loading, providing the map callback with initial data needed to render. This resolved the startup error and made the dashboard fully functional with interactive filters updating the map.
 
+## Author
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CRUD Functionality test execution
-
-
-
-
-
-Contact
-Your name: Oliver Flores
+Oliver Flores
