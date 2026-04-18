@@ -80,6 +80,14 @@ Dash was used to build the web application, providing both the "View" (HTML layo
 
 **Resolution**: Added the `selected_rows=[0]` property to the `dash_table.DataTable` component. This forces the table to pre-select the first row upon loading, providing the map callback with initial data needed to render. This resolved the startup error and made the dashboard fully functional with interactive filters updating the map.
 
+## Reflection
+
+**Maintainable, readable, and adaptable code:** I wrote the CRUD module with clear method names and docstrings, and made the `__init__` method accept connection parameters rather than hardcoding them. This made it easy to import and reuse in Project Two. In the future, this same module could be used for any MongoDB database, not just animal shelter data.
+
+**Problem-solving approach:** I broke Grazioso Salvare's requirements into smaller pieces (database, filters, table, chart, map) and solved each one individually. Unlike previous courses that provided starter code, this project required me to choose my own tech stack. In the future, I'll start with data modeling before writing any code.
+
+**What computer scientists do:** We build systems that turn raw data into useful tools. This dashboard helps Grazioso Salvare quickly find rescue dogs instead of manually scanning spreadsheets, saving time and potentially saving lives.
+
 ## Author
 
 Oliver Flores
